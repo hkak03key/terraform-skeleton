@@ -58,7 +58,7 @@ cat << EOS
 ----------------------------------
 今回作成するterraform環境のバージョンを指定してください。
 
-default: $TERRAFORM_DEFAULT_VERSION（最新版）
+default: $TERRAFORM_DEFAULT_VERSION （最新版）
 EOS
 read -p "> " TERRAFORM_VERSION
 
