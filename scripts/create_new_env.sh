@@ -188,6 +188,7 @@ find . -name "*.tf" -exec sed -i "s/%BACKEND_DYNAMODB_TABLE%/$TERRAFORM_BACKEND_
 find . -name "*.tf" -exec sed -i "s/%AWS_PROFILE%/$TERRAFORM_AWS_PROFILE/g" {} \;
 find . -name "*.tf" -exec sed -i "s/%AWS_REGION%/$TERRAFORM_AWS_REGION/g" {} \;
 find . -name "*.tf" -exec sed -i "s/%ACCOUNT_NAME%/$ACCOUNT_NAME/g" {} \;
+find . -name "*.tf" -exec sed -i "s/%TERRAFORM_VERSION%/$TERRAFORM_VERSION/g" {} \;
 
 
 #=================================
