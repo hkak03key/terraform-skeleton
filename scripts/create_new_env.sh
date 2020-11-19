@@ -66,15 +66,42 @@ TERRAFORM_VERSION=${TERRAFORM_VERSION:-$TERRAFORM_DEFAULT_VERSION}
 printf "terraform version: %s\n\n" "$TERRAFORM_VERSION"
 
 
+
 cat << EOS 
 ----------------------------------
 aws account名を指定してください。
 これは、backend用s3/dynamodbのリソース名に利用され、variable.tfにも保存されます。
 複数環境を本リポジトリで管理する場合は、環境用ディレクトリ名にも利用されます。
 
-使用可能文字: 半角英数字とハイフン
+使用可能文字: [0-9|a-z|-] （末尾にハイフンを付けないでください）
 EOS
-read -p "> " ACCOUNT_NAME
+sed_exp () {
+  if [ "$(sed --version 1> /dev/null 2> /dev/null; echo $?)" == "0" ]; then
+    # GNU
+    sed -r $*
+  else
+    # BSD
+    sed -E $*
+  fi
+}
+export -f sed_exp
+
+while :
+do
+  read -p "> " ACCOUNT_NAME
+  if [ "$ACCOUNT_NAME" == "" ]; then
+    echo "aws account名を指定してください。"
+    continue
+  elif [ $(echo $ACCOUNT_NAME | sed_exp "s/[0-9|a-z|-]//g" | wc -w) -ne 0 ]; then
+    echo "使用できない文字が使用されています。"
+    continue
+  elif [ $(echo $ACCOUNT_NAME | grep -E "\-$" | wc -w) -ne 0 ]; then
+    echo "末尾にハイフンが使用されています。"
+    continue
+  else
+    break
+  fi
+done
 printf "aws account名: %s\n\n" "$ACCOUNT_NAME"
 
 
