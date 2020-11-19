@@ -182,13 +182,25 @@ echo "replace .tf string..."
 
 cd $TERRAFORM_NEW_ENV_DIR
 
-find . -name "*.tf" -exec sed -i "s/%BACKEND_S3_BUCKET%/$TERRAFORM_BACKEND_S3_BUCKET/g" {} \;
-find . -name "*.tf" -exec sed -i "s/%BACKEND_S3_KEY%/$TERRAFORM_BACKEND_S3_KEY/g" {} \;
-find . -name "*.tf" -exec sed -i "s/%BACKEND_DYNAMODB_TABLE%/$TERRAFORM_BACKEND_DYNAMODB_TABLE/g" {} \;
-find . -name "*.tf" -exec sed -i "s/%AWS_PROFILE%/$TERRAFORM_AWS_PROFILE/g" {} \;
-find . -name "*.tf" -exec sed -i "s/%AWS_REGION%/$TERRAFORM_AWS_REGION/g" {} \;
-find . -name "*.tf" -exec sed -i "s/%ACCOUNT_NAME%/$ACCOUNT_NAME/g" {} \;
-find . -name "*.tf" -exec sed -i "s/%TERRAFORM_VERSION%/$TERRAFORM_VERSION/g" {} \;
+sed_overwrite () {
+  if [ "$(sed --version 1> /dev/null 2> /dev/null; echo $?)" == "0" ]; then
+    # GNU
+    sed -r -i $*
+  else
+    # BSD
+    sed -E -i "" $*
+  fi
+}
+
+export -f sed_overwrite
+
+find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%BACKEND_S3_BUCKET%/$TERRAFORM_BACKEND_S3_BUCKET/g\" {}" \;
+find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%BACKEND_S3_KEY%/$TERRAFORM_BACKEND_S3_KEY/g\" {}" \;
+find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%BACKEND_DYNAMODB_TABLE%/$TERRAFORM_BACKEND_DYNAMODB_TABLE/g\" {}" \;
+find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%AWS_PROFILE%/$TERRAFORM_AWS_PROFILE/g\" {}" \;
+find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%AWS_REGION%/$TERRAFORM_AWS_REGION/g\" {}" \;
+find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%ACCOUNT_NAME%/$ACCOUNT_NAME/g\" {}" \;
+find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%TERRAFORM_VERSION%/$TERRAFORM_VERSION/g\" {}" \;
 
 
 #=================================
@@ -212,7 +224,7 @@ terraform apply
 #=================================
 echo "enable remote backend..."
 # comment in
-sed -i "s/^# //g" $TERRAFORM_NEW_ENV_DIR/backend.tf
+sed_overwrite "s/^#[[:space:]]//g" $TERRAFORM_NEW_ENV_DIR/backend.tf
 
 terraform fmt
 terraform init
