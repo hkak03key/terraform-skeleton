@@ -221,13 +221,13 @@ sed_overwrite () {
 
 export -f sed_overwrite
 
-find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%BACKEND_S3_BUCKET%/$TERRAFORM_BACKEND_S3_BUCKET/g\" {}" \;
-find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%BACKEND_S3_KEY%/$TERRAFORM_BACKEND_S3_KEY/g\" {}" \;
-find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%BACKEND_DYNAMODB_TABLE%/$TERRAFORM_BACKEND_DYNAMODB_TABLE/g\" {}" \;
-find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%AWS_PROFILE%/$TERRAFORM_AWS_PROFILE/g\" {}" \;
-find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%AWS_REGION%/$TERRAFORM_AWS_REGION/g\" {}" \;
-find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%ACCOUNT_NAME%/$ACCOUNT_NAME/g\" {}" \;
-find . -name "*.tf" -exec bash -c "sed_overwrite \"s/%TERRAFORM_VERSION%/$TERRAFORM_VERSION/g\" {}" \;
+find . -maxdepth 1 -name "*.tf" -exec bash -c "sed_overwrite \"s/%BACKEND_S3_BUCKET%/$TERRAFORM_BACKEND_S3_BUCKET/g\" {}" \;
+find . -maxdepth 1 -name "*.tf" -exec bash -c "sed_overwrite \"s/%BACKEND_S3_KEY%/$TERRAFORM_BACKEND_S3_KEY/g\" {}" \;
+find . -maxdepth 1 -name "*.tf" -exec bash -c "sed_overwrite \"s/%BACKEND_DYNAMODB_TABLE%/$TERRAFORM_BACKEND_DYNAMODB_TABLE/g\" {}" \;
+find . -maxdepth 1 -name "*.tf" -exec bash -c "sed_overwrite \"s/%AWS_PROFILE%/$TERRAFORM_AWS_PROFILE/g\" {}" \;
+find . -maxdepth 1 -name "*.tf" -exec bash -c "sed_overwrite \"s/%AWS_REGION%/$TERRAFORM_AWS_REGION/g\" {}" \;
+find . -maxdepth 1 -name "*.tf" -exec bash -c "sed_overwrite \"s/%ACCOUNT_NAME%/$ACCOUNT_NAME/g\" {}" \;
+find . -maxdepth 1 -name "*.tf" -exec bash -c "sed_overwrite \"s/%TERRAFORM_VERSION%/$TERRAFORM_VERSION/g\" {}" \;
 
 
 #=================================
